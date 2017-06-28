@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.fjnu.cr.mapper.DictionaryMapper" >
+  <resultMap id="BaseResultMap" type="edu.fjnu.cr.domain.Dictionary" >
+    <id column="dict_id" property="dictId" jdbcType="INTEGER" />
+    <result column="dict_type" property="dictType" jdbcType="INTEGER" />
+    <result column="dict_type_name" property="dictTypeName" jdbcType="VARCHAR" />
+    <result column="dict_name" property="dictName" jdbcType="VARCHAR" />
+    <result column="dict_parent" property="dictParent" jdbcType="INTEGER" />
+    <result column="dict_parents" property="dictParents" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    dict_id, dict_type, dict_type_name, dict_name, dict_parent, dict_parents
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="edu.fjnu.cr.domain.DictionaryExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dictionary
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dictionary
+    where dict_id = #{dictId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dictionary
+    where dict_id = #{dictId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="edu.fjnu.cr.domain.DictionaryExample" >
+    delete from dictionary
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="edu.fjnu.cr.domain.Dictionary" >
+    insert into dictionary (dict_id, dict_type, dict_type_name, 
+      dict_name, dict_parent, dict_parents
+      )
+    values (#{dictId,jdbcType=INTEGER}, #{dictType,jdbcType=INTEGER}, #{dictTypeName,jdbcType=VARCHAR}, 
+      #{dictName,jdbcType=VARCHAR}, #{dictParent,jdbcType=INTEGER}, #{dictParents,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="edu.fjnu.cr.domain.Dictionary" >
+    insert into dictionary
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dictId != null" >
+        dict_id,
+      </if>
+      <if test="dictType != null" >
+        dict_type,
+      </if>
+      <if test="dictTypeName != null" >
+        dict_type_name,
+      </if>
+      <if test="dictName != null" >
+        dict_name,
+      </if>
+      <if test="dictParent != null" >
+        dict_parent,
+      </if>
+      <if test="dictParents != null" >
+        dict_parents,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dictId != null" >
+        #{dictId,jdbcType=INTEGER},
+      </if>
+      <if test="dictType != null" >
+        #{dictType,jdbcType=INTEGER},
+      </if>
+      <if test="dictTypeName != null" >
+        #{dictTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictName != null" >
+        #{dictName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictParent != null" >
+        #{dictParent,jdbcType=INTEGER},
+      </if>
+      <if test="dictParents != null" >
+        #{dictParents,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="edu.fjnu.cr.domain.DictionaryExample" resultType="java.lang.Integer" >
+    select count(*) from dictionary
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update dictionary
+    <set >
+      <if test="record.dictId != null" >
+        dict_id = #{record.dictId,jdbcType=INTEGER},
+      </if>
+      <if test="record.dictType != null" >
+        dict_type = #{record.dictType,jdbcType=INTEGER},
+      </if>
+      <if test="record.dictTypeName != null" >
+        dict_type_name = #{record.dictTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dictName != null" >
+        dict_name = #{record.dictName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dictParent != null" >
+        dict_parent = #{record.dictParent,jdbcType=INTEGER},
+      </if>
+      <if test="record.dictParents != null" >
+        dict_parents = #{record.dictParents,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update dictionary
+    set dict_id = #{record.dictId,jdbcType=INTEGER},
+      dict_type = #{record.dictType,jdbcType=INTEGER},
+      dict_type_name = #{record.dictTypeName,jdbcType=VARCHAR},
+      dict_name = #{record.dictName,jdbcType=VARCHAR},
+      dict_parent = #{record.dictParent,jdbcType=INTEGER},
+      dict_parents = #{record.dictParents,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="edu.fjnu.cr.domain.Dictionary" >
+    update dictionary
+    <set >
+      <if test="dictType != null" >
+        dict_type = #{dictType,jdbcType=INTEGER},
+      </if>
+      <if test="dictTypeName != null" >
+        dict_type_name = #{dictTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictName != null" >
+        dict_name = #{dictName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictParent != null" >
+        dict_parent = #{dictParent,jdbcType=INTEGER},
+      </if>
+      <if test="dictParents != null" >
+        dict_parents = #{dictParents,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where dict_id = #{dictId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="edu.fjnu.cr.domain.Dictionary" >
+    update dictionary
+    set dict_type = #{dictType,jdbcType=INTEGER},
+      dict_type_name = #{dictTypeName,jdbcType=VARCHAR},
+      dict_name = #{dictName,jdbcType=VARCHAR},
+      dict_parent = #{dictParent,jdbcType=INTEGER},
+      dict_parents = #{dictParents,jdbcType=VARCHAR}
+    where dict_id = #{dictId,jdbcType=INTEGER}
+  </update>
+</mapper>

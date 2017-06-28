@@ -1,0 +1,97 @@
+<beans 
+xmlns="http://www.springframework.org/schema/beans"
+xmlns:mvc="http://www.springframework.org/schema/mvc"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:aop="http://www.springframework.org/schema/aop"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx.xsd
+http://www.springframework.org/schema/mvc 
+http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+">
+	
+	<context:component-scan base-package="edu.fjnu.cr.controller,edu.fjnu.cr.service.imp,edu.fjnu.cr.service,edu.fjnu.cr.shiro"></context:component-scan>		
+	<!-- 开启aop，对类代理 -->
+	<aop:config proxy-target-class="true"></aop:config>
+	<mvc:default-servlet-handler/>
+	<!-- <mvc:resources location="/js" mapping="/js/**"/>
+	<mvc:resources location="/images" mapping="/images/**"/>
+	<mvc:resources location="/styles" mapping="/styles/**"/> -->
+	<!-- 开启shiro注解支持 -->
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">    
+	    <property name="exceptionMappings">    
+	        <props>    
+	            <prop key="org.apache.shiro.authz.UnauthorizedException">/refuse</prop>  
+	        </props>    
+	    </property>    
+	</bean> 
+	<!-- 配置处理器映射器 -->
+	<!--注解映射器  -->
+	
+	<mvc:annotation-driven conversion-service="conversionService" >
+		
+	</mvc:annotation-driven>
+	 
+	<!-- 自定义webBinder -->
+	<bean id="customBinder"
+		class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+		<!-- 使用converter进行参数转 -->
+		<property name="conversionService" ref="conversionService" />
+	</bean>
+	<!-- 转换器 -->
+	<bean id="conversionService"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+				<bean class="edu.fjnu.cr.controller.converter.CustomDateConverter" />
+				<bean class="edu.fjnu.cr.controller.converter.StringTrimConverter" />
+				
+			</list>
+		</property>
+	</bean>
+	
+ <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>text/html; charset=UTF-8</value>
+                            <value>application/json;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>text/html; charset=UTF-8</value>
+                            <value>application/json;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+	
+	<!-- 定义统一异常处理类-->
+	<bean class="edu.fjnu.cr.exception.CustomExceptionResolver"></bean>
+	
+	<!--配置视图解析器  -->
+	 <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsps/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+</beans>
